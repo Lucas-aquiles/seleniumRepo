@@ -1,5 +1,5 @@
 import express from "express";
-import { By, Builder, Browser } from "selenium-webdriver";
+import { By, Builder, Browser,until } from "selenium-webdriver";
 import assert from "assert";
 
 const app = express();
@@ -20,6 +20,8 @@ app.get("/", async (req, res) => {
     const xpathLi = '//ul/li[@class="iFjolb gws-plugins-horizon-jobs__li-ed"]';
     const elementos = await driver.findElements(By.xpath(xpathLi));
 
+
+
     for (let elemento of elementos) {
       try {
         let div1 = await elemento.findElement(
@@ -27,65 +29,45 @@ app.get("/", async (req, res) => {
         );
         let texto = await div1.getText();
         console.log("Título del trabajo:", texto);
+/* */       
 
         await div1.click();
 
+        ///////////////////////////////
         const xpathDivs = '//div[@class="ocResc KKh3md"]/div[@class="I2Cbhb"]';
         const elementos = await driver.findElements(By.xpath(xpathDivs));
-
         let haceDias, tiempoCompleto;
-
         for (let elemento of elementos) {
           let spanPrincipal = await elemento.findElement(
             By.xpath('.//span[@class="LL4CDc"]')
           );
-
           let spanHijo = await spanPrincipal.findElement(
             By.xpath('.//span[@aria-hidden="true"]')
           );
           let texto = await spanHijo.getText();
-
           if (texto.includes("hace")) {
             haceDias = texto;
           } else if (texto.includes("Tiempo completo")) {
             tiempoCompleto = texto;
           }
         }
-
         console.log("Hace  días:", haceDias);
         console.log("Tiempo completo:", tiempoCompleto);
+//////////////////////////////
 
-        const xpathSpan = '//span[@class="HBvzbc"]';
-        const spanDescripcion = await driver.findElement(By.xpath(xpathSpan));
-        const textoDescripcion = await spanDescripcion.getText();
 
-        console.log("Descripción del cargo:");
-        console.log(textoDescripcion);
+          let spanElement = await driver.wait(until.elementLocated(By.css('div.YgLbBe.YRi0le span.HBvzbc')), 1000);
+          await driver.wait(until.elementIsVisible(spanElement), 1000);
+           // Obtener el texto del <span>
+            let spanText = await spanElement.getText();
+          console.log("textooooooooooooooooooooo",spanText);
+            console.log(1)
+          await driver.sleep(2000);
       } catch (err) {
         console.log("Error al obtener la información del elemento:", err);
       }
     }
-
-    // await inputFirst.sendKeys('lucas@gmail.com');
-
-    // let inputSecond = await driver.findElement(By.id("password"))
-    // await inputSecond.sendKeys('123asc');
-
-    // const xpath1 = '//button[@class="btn__primary--large from__button--floating" and @data-litms-control-urn="login-submit" and @aria-label="Inicia sesión" and @type="submit"]';
-    // const loc = await driver.findElement(By.xpath(xpath1));
-
-    // await loc.click();
-
-    // let submitButton = await driver.findElement(By.css('button'));
-
-    // await textBox.sendKeys('Selenium gente');
-    // await submitButton.click();
-
-    // let message = await driver.findElement(By.id('message'));
-    // let value = await message.getText();
-    // assert.equal("Received!", value);
-
-    // console.log("aaaa",value)
+;
 
     // await driver.quit();
   } catch (error) {
