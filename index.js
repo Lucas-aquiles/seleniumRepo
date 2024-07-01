@@ -9,6 +9,7 @@ app.get("/", async (req, res) => {
   let driver;
   try {
     driver = await new Builder().forBrowser(Browser.CHROME).build();
+    driver.manage().window().maximize()
     await driver.get(
       "https://www.google.com.ar/search?q=trabajos+de+programador+++Jr+&sca_esv=338ac2989bfe946c&ei=jtx-ZvyIGdaG5OUP0NmLyAU&uact=5&oq=trabajos+de+programador++remoto&gs_lp=Egxnd3Mtd2l6LXNlcnAiH3RyYWJham9zIGRlIHByb2dyYW1hZG9yICByZW1vdG8yBRAAGIAEMggQABiABBiiBDIIEAAYgAQYogQyCBAAGIAEGKIEMggQABiABBiiBEjDKFCsFljVIHACeAGQAQCYAW2gAbMIqgEDNi41uAEDyAEA-AEBmAIHoAKkBMICChAAGLADGNYEGEeYAwCIBgGQBgiSBwMzLjSgB8Iu&sclient=gws-wiz-serp&ibp=htl;jobs&sa=X&ved=2ahUKEwixl_yK1P6GAxW6HLkGHftTDRoQutcGKAF6BAgYEAQ#fpstate=tldetail&htivrt=jobs&htidocid=KsAXthbWPMNVZANGAAAAAA%3D%3D"
     );
@@ -55,12 +56,17 @@ app.get("/", async (req, res) => {
         console.log("Tiempo completo:", tiempoCompleto);
 //////////////////////////////
 
-
-          let spanElement = await driver.wait(until.elementLocated(By.css('div.YgLbBe.YRi0le span.HBvzbc')), 1000);
-          await driver.wait(until.elementIsVisible(spanElement), 1000);
+        try {
+          let spanElement = await driver.wait(until.elementLocated(By.xpath('//*[@id="gws-plugins-horizon-jobs__job_details_page"]/div/div[4]/g-expandable-container/div/div/div')), 5000);
+          console.log("debug element", spanElement.getText())
+          
            // Obtener el texto del <span>
             let spanText = await spanElement.getText();
           console.log("textooooooooooooooooooooo",spanText);
+        } catch (error) {
+          console.error("debug errrr", error)
+        }
+         
             console.log(1)
           await driver.sleep(2000);
       } catch (err) {
