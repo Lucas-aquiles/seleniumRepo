@@ -1,4 +1,11 @@
-let driver;
+import { By, Builder, Browser,until } from "selenium-webdriver";
+import assert from "assert";
+
+
+
+export const allPosition = async (req,res)=>{
+
+  let driver;
   try {
     driver = await new Builder().forBrowser(Browser.CHROME).build();
     driver.manage().window().maximize()
@@ -118,3 +125,10 @@ try {
   }
 
 
+
+  res.send("hol")
+
+
+}
+
+  
